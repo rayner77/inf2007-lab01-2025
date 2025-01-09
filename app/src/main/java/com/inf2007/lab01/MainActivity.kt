@@ -39,6 +39,7 @@ fun MainScreen() {
     Lab01Theme {
         Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
             var username by remember { mutableStateOf("") }
+            var SubmitName by remember { mutableStateOf("") }
             var showGreeting by remember { mutableStateOf(false) }
 
             Column(
@@ -49,14 +50,18 @@ fun MainScreen() {
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 UserInput(
-                    name = name,
-                    onNameChange = { name = it }
+                    name = username,
+                    onNameChange = { username = it },
+                    modifier = Modifier.testTag("nameInput")
                 )
 
                 Button(
                     onClick = {
                         if (username.isNotBlank()) {
-                            showGreeting = false
+                            SubmitName = username
+                            showGreeting = true // Make sure the greeting is shown
+                        } else {
+                            showGreeting = false // Hide the greeting
                         }
                     },
                     modifier = Modifier
@@ -67,11 +72,12 @@ fun MainScreen() {
                 }
 
                 if (showGreeting) {
-                    Greeeting(
-                        name = username,
+                    Greeting(
+                        name = SubmitName,
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(top = 16.dp)
+                            .testTag("greetingMsg")
                     )
 
                 }
@@ -95,10 +101,10 @@ fun UserInput(name: String, onNameChange: (String) -> Unit, modifier: Modifier =
 @Composable
 fun Greeting(name: String, modifier: Modifier = Modifier) {
     Text(
-        text = "Hello $username!, Welcome to InF2007!",
+        text = "Hello $name!, Welcome to INF2007!",
         modifier = Modifier
             .fillMaxWidth()
-            .testTag("greeting")
+            .testTag("greetingMsg")
     )
 }
 
